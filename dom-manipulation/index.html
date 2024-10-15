@@ -12,15 +12,20 @@
   <!-- Display Area for Quotes -->
   <div id="quoteDisplay"></div>
 
-  <!-- Button to Show New Quote -->
-  <button id="newQuote">Show New Quote</button>
-
   <!-- Form to Add a New Quote -->
   <div>
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
     <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
     <button onclick="addQuote()">Add Quote</button>
   </div>
+
+  <!-- Category filter dropdown -->
+<select id="categoryFilter" onchange="filterQuotes()">
+  <option value="all">All Categories</option>
+</select>
+
+  <!-- Button to Show New Quote -->
+  <button id="newQuote">Show New Quote</button>
 
   <!-- Button to export quotes as JSON -->
 <button id="exportQuotes">Export Quotes to JSON</button>

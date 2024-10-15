@@ -10,6 +10,31 @@ function saveQuotes() {
   localStorage.setItem('quotes', JSON.stringify(quotes));
 }
 
+// Function to populate unique categories in the dropdown
+function populateCategories() {
+  const categoryFilter = document.getElementById("categoryFilter");
+  const categories = [...new Set(quotes.map(quote => quote.category))];  // Get unique categories
+
+  // Remove existing options except for "All Categories"
+  categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+
+  // Dynamically populate categories
+  categories.forEach(category => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    categoryFilter.appendChild(option);
+  });
+
+  // Load the last selected filter from local storage, if any
+  const lastSelectedCategory = localStorage.getItem('selectedCategory');
+  if (lastSelectedCategory) {
+    categoryFilter.value = lastSelectedCategory;
+    filterQuotes();
+  }
+}
+
+
  // Function to display a random quote
 function showRandomQuote() {
     const randomIndex = Math.floor(Math.random() * quotes.length);
@@ -127,3 +152,5 @@ document.getElementById("exportQuotes").addEventListener("click", exportQuotes);
   // Call the function to create the form on page load
   createAddQuoteForm();
   loadLastViewedQuote();
+  // Populate the categories and load last filter on page load
+  populateCategories();
