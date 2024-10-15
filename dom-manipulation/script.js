@@ -43,6 +43,30 @@ async function postQuoteToServer(quote) {
     console.error("Error posting quote to server:", error);
   }
 }
+
+// Function to periodically fetch quotes from the server and sync
+function startDataSync() {
+  setInterval(fetchQuotesFromServer, 10000);  // Sync every 10 seconds
+}
+
+// Merge server data with local quotes
+function mergeServerQuotes(serverQuotes) {
+  const localQuotes = JSON.parse(localStorage.getItem('quotes')) || [];
+
+  // Simple conflict resolution: the server data takes precedence
+  serverQuotes.forEach(serverQuote => {
+    const localQuote = localQuotes.find(q => q.text === serverQuote.text);
+
+    if (!localQuote) {
+      // If the quote does not exist locally, add it
+      localQuotes.push(serverQuote);
+    }
+  });
+
+  // Save the merged data back to local storage
+  localStorage.setItem('quotes', JSON.stringify(localQuotes));
+}
+
 // Function to populate unique categories in the dropdown
 function populateCategories() {
   const categoryFilter = document.getElementById("categoryFilter");
