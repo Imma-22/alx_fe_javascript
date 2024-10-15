@@ -62,9 +62,38 @@ function mergeServerQuotes(serverQuotes) {
       localQuotes.push(serverQuote);
     }
   });
+}
 
-  // Save the merged data back to local storage
+function resolveConflict(localQuote, serverQuote) {
+  // Simple resolution: Server quote takes precedence
+  if (localQuote.text !== serverQuote.text) {
+    return confirm("Conflict detected. Server version will replace the local version.");
+  }
+  return true;
+}
+
+// Modify merge function to include conflict resolution
+function mergeServerQuotes(serverQuotes) {
+  const localQuotes = JSON.parse(localStorage.getItem('quotes')) || [];
+
+  serverQuotes.forEach(serverQuote => {
+    const localQuote = localQuotes.find(q => q.text === serverQuote.text);
+
+    if (localQuote) {
+      // Conflict detected, handle it
+      if (resolveConflict(localQuote, serverQuote)) {
+        // If user accepts, replace local quote
+        localQuote.text = serverQuote.text;
+        localQuote.category = serverQuote.category;
+      }
+    } else {
+      // No conflict, add server quote to local storage
+      localQuotes.push(serverQuote);
+    }
+  });
+
   localStorage.setItem('quotes', JSON.stringify(localQuotes));
+  alert("Quotes synced with server!");
 }
 
 // Function to populate unique categories in the dropdown
