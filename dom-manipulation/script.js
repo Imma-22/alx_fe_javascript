@@ -10,6 +10,39 @@ function saveQuotes() {
   localStorage.setItem('quotes', JSON.stringify(quotes));
 }
 
+const serverURL = 'https://jsonplaceholder.typicode.com/posts';
+
+// Function to simulate fetching data from the server
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch(serverURL);
+    const serverQuotes = await response.json();
+    console.log("Fetched quotes from server:", serverQuotes);
+
+    // Simulate merging server quotes with local quotes
+    mergeServerQuotes(serverQuotes);
+  } catch (error) {
+    console.error("Error fetching quotes from server:", error);
+  }
+}
+
+// Function to simulate posting data to the server
+async function postQuoteToServer(quote) {
+  try {
+    const response = await fetch(serverURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(quote)
+    });
+
+    const result = await response.json();
+    console.log("Quote posted to server:", result);
+  } catch (error) {
+    console.error("Error posting quote to server:", error);
+  }
+}
 // Function to populate unique categories in the dropdown
 function populateCategories() {
   const categoryFilter = document.getElementById("categoryFilter");
