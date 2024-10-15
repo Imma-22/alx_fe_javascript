@@ -5,44 +5,44 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
     { text: "The only thing we have to faer is fear itself.", category: "Life" }
   ];
 
-  // Save quotes to local storage
-function saveQuotes() {
-  localStorage.setItem('quotes', JSON.stringify(quotes));
-}
+//   // Save quotes to local storage
+// function saveQuotes() {
+//   localStorage.setItem('quotes', JSON.stringify(quotes));
+// }
 
-const serverURL = 'https://jsonplaceholder.typicode.com/posts';
+// const serverURL = 'https://jsonplaceholder.typicode.com/posts';
 
-// Function to simulate fetching data from the server
-async function fetchQuotesFromServer() {
-  try {
-    const response = await fetch(serverURL);
-    const serverQuotes = await response.json();
-    console.log("Fetched quotes from server:", serverQuotes);
+// // Function to simulate fetching data from the server
+// async function fetchQuotesFromServer() {
+//   try {
+//     const response = await fetch(serverURL);
+//     const serverQuotes = await response.json();
+//     console.log("Fetched quotes from server:", serverQuotes);
 
-    // Simulate merging server quotes with local quotes
-    mergeServerQuotes(serverQuotes);
-  } catch (error) {
-    console.error("Error fetching quotes from server:", error);
-  }
-}
+//     // Simulate merging server quotes with local quotes
+//     mergeServerQuotes(serverQuotes);
+//   } catch (error) {
+//     console.error("Error fetching quotes from server:", error);
+//   }
+// }
 
 // Function to simulate posting data to the server
-async function postQuoteToServer(quote) {
-  try {
-    const response = await fetch(serverURL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(quote)
-    });
+// async function postQuoteToServer(quote) {
+//   try {
+//     const response = await fetch(serverURL, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(quote)
+//     });
 
-    const result = await response.json();
-    console.log("Quote posted to server:", result);
-  } catch (error) {
-    console.error("Error posting quote to server:", error);
-  }
-}
+//     const result = await response.json();
+//     console.log("Quote posted to server:", result);
+//   } catch (error) {
+//     console.error("Error posting quote to server:", error);
+//   }
+// }
 
 // Function to periodically fetch quotes from the server and sync
 function startDataSync() {
@@ -64,37 +64,6 @@ function mergeServerQuotes(serverQuotes) {
   });
 }
 
-function resolveConflict(localQuote, serverQuote) {
-  // Simple resolution: Server quote takes precedence
-  if (localQuote.text !== serverQuote.text) {
-    return confirm("Conflict detected. Server version will replace the local version.");
-  }
-  return true;
-}
-
-// Modify merge function to include conflict resolution
-function mergeServerQuotes(serverQuotes) {
-  const localQuotes = JSON.parse(localStorage.getItem('quotes')) || [];
-
-  serverQuotes.forEach(serverQuote => {
-    const localQuote = localQuotes.find(q => q.text === serverQuote.text);
-
-    if (localQuote) {
-      // Conflict detected, handle it
-      if (resolveConflict(localQuote, serverQuote)) {
-        // If user accepts, replace local quote
-        localQuote.text = serverQuote.text;
-        localQuote.category = serverQuote.category;
-      }
-    } else {
-      // No conflict, add server quote to local storage
-      localQuotes.push(serverQuote);
-    }
-  });
-
-  localStorage.setItem('quotes', JSON.stringify(localQuotes));
-  alert("Quotes synced with server!");
-}
 
 // Function to populate unique categories in the dropdown
 function populateCategories() {
