@@ -9,28 +9,19 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
 function saveQuotes() {
   localStorage.setItem('quotes', JSON.stringify(quotes));
 }
-// Function to fetch quotes from the server and sync with local quotes
+const serverURL = 'https://jsonplaceholder.typicode.com/posts';
+
+// Function to simulate fetching data from the server
 async function syncQuotes() {
   try {
-    // Fetch quotes from the server
     const response = await fetch(serverURL);
     const serverQuotes = await response.json();
-
     console.log("Fetched quotes from server:", serverQuotes);
 
-    // Merge server quotes with local quotes
+    // Simulate merging server quotes with local quotes
     mergeServerQuotes(serverQuotes);
-
-    // Sync new local quotes to the server
-    quotes.forEach(async quote => {
-      if (!serverQuotes.find(sq => sq.text === quote.text)) {
-        await postQuoteToServer(quote);  // Post only new quotes to server
-      }
-    });
-
-    alert("Quotes synced with the server!");
   } catch (error) {
-    console.error("Error syncing quotes:", error);
+    console.error("Error fetching quotes from server:", error);
   }
 }
 
@@ -51,24 +42,25 @@ async function postQuoteToServer(quote) {
     console.error("Error posting quote to server:", error);
   }
 }
+// Function to periodically fetch quotes from the server and sync
+function startDataSync() {
+  setInterval(fetchQuotesFromServer, 10000);  // Sync every 10 seconds
+}
 
-// Function to merge server data with local quotes
+// Merge server data with local quotes
 function mergeServerQuotes(serverQuotes) {
   const localQuotes = JSON.parse(localStorage.getItem('quotes')) || [];
 
-  // Simple conflict resolution: server quote takes precedence
+  // Simple conflict resolution: the server data takes precedence
   serverQuotes.forEach(serverQuote => {
     const localQuote = localQuotes.find(q => q.text === serverQuote.text);
+
     if (!localQuote) {
+      // If the quote does not exist locally, add it
       localQuotes.push(serverQuote);
     }
   });
-
-  // Save merged quotes back to local storage
-  localStorage.setItem('quotes', JSON.stringify(localQuotes));
 }
-
-
 
 
 
