@@ -37,9 +37,9 @@ async function postQuoteToServer(quote) {
     });
 
     const result = await response.json();
-    console.log("Quote posted to server:", result);
+    console.log("Quotes synced with server!", result);
   } catch (error) {
-    console.error("Error posting quote to server:", error);
+    console.error("Error syncing quotes with server", error);
   }
 }
 // Function to periodically fetch quotes from the server and sync
@@ -50,6 +50,7 @@ function startDataSync() {
 // Merge server data with local quotes
 function mergeServerQuotes(serverQuotes) {
   const localQuotes = JSON.parse(localStorage.getItem('quotes')) || [];
+
 
   // Simple conflict resolution: the server data takes precedence
   serverQuotes.forEach(serverQuote => {
